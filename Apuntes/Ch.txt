@@ -1,0 +1,180 @@
+RESUMEN PEP
+
+Tipos de variables:
+Numéricas -> valores numéricos sujetas a operaciones aritméticas
+	Se separan en discretas y continuas
+Categóricas -> pueden tomar un valor de un conjunto acotado
+	Se separan en nominales y ordinales
+
+
+INFERENCIA.
+
+Error estándar -> desv estandar de una distribución. SE = s/sqrt(n)
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%% PRUEBA Z %%%%%%%%%%%%%%%%%%%%%%%%%
+Para inferir acerca de las medias con una o dos muestras. Adecuada si queremos asegurar o descartar que la media de la población tiene un cierto valor hipotético. Las condiciones son:
+- La muestra debe tener al menos 30 observaciones. Si la muestra tiene menos de 30 observaciones, se debe conocer la varianza de la población.
+- Las observaciones deben ser independientes, es decir que la elección de una observación para la muestra no influye en la selección de las otras.
+- La población de donde se obtuvo la muestra sigue aproximadamente una distribución normal.
+*** SE TIENE QUE CONOCER LA DESVEST DE LA POBLACIÓN, Y LA MUESTRA DEBE SER MAYOR A 30.
+SI NO SE CUMPLEN ESAS CONDICIONES, USAR T DE STUDENT
+En R: z.test
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% PRUEBA T DE STUDENT %%%%%%%%%%%%%%%%%%%%%%%%%
+MÁS UTILIZADA QUE LA PRUEBA Z, SIRVE PARA MUESTRAS < 30, Y SE PUEDE USAR CUANDO NO SE CONOCE LA DESVEST DE LA POBLACIÓN
+Para una muestra:
+Condiciones:
+1. Las observaciones son independientes entre sí:
+- Muestras al azar -> independencia
+- Estudio confiable, 10% aprox de las muestras
+2. Las observaciones provienen de una distribución cercana a la normal:
+- GRAFICO Q-Q
+- o Shapiro-Wilk: normalidad <- shapiro.test ( diferencia).
+Si p > alfa -> SE ACEPTA SUPUESTO DE NORMALIDAD (SHAPIRO.TEST)
+UTILIZAR UNA DE LAS DOS
+En R: t.test
+
+%%%%%%%%%%%%%%%%%%%%%%%% T DE STUDENT PARA DOS MUESTRAS PAREADAS %%%%%%%%%%%%%%%%%%
+Los datos están pareados, es decir, cada observación de un conjunto tiene una correspondencia o conexión especial con exactamente una observación del otro.
+Una forma de uso común para examinar datos pareados es usar la diferencia entre cada par de observaciones. 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%% T DE STUDENT PARA DOS MUESTRAS INDEPENDIENTES %%%%%%%%%%%%%%%%%%%%%%%%%
+Se usa para comparar las medias de dos poblaciones en que las observaciones con que se cuenta no tienen relación con ninguna de las otras observaciones, ni influyen en su selección, ni en la misma ni en la otra muestra. (DIFERENCIA DE MEDIAS)
+Condiciones:
+1. Cada muestra cumple las condiciones para usar la distribución t. 
+ - NORMALIDAD: APLICAR SHAPIRO O Q-Q A CADA MUESTRA
+Las muestras deben ser independientes.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+---------------------------------------------------------------
+
+Si p < alfa: se rechaza la hipótesis nula
+Si p > alfa: se falla al rechazar la hipótesis nula. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Error tipo I: rechazar H0 en favor de HA cuando H0 es en realidad verdadera.
+Error tipo II: no rechazar H0 en favor de HA cuando HA es en realidad verdadera.
+
+--------------------------------------------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%% PODER ESTADÍSTICO %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Poder: la probabilidad de correctamente rechazar H0 cuando es falsa (1 - beta).
+Tamaño del efecto: a diferencia entre dos grupos, o del valor observado con respecto al valor nulo.
+- El poder de la prueba aumenta mientras mayor es el tamaño del efecto (en este caso, la distancia entre el valor nulo y la media de la muestra).
+- A medida que el tamaño del efecto disminuye (es decir, el estimador se acerca al valor nulo), el poder se aproxima al nivel de significación.
+- Usar un valor de α más exigente (menor), manteniendo constante el tamaño de la muestra, hace que la curva de poder sea más baja para cualquier tamaño del efecto (lo que verifica la relación entre α y β).
+- Usar una muestra más grande aumenta el poder de la prueba para cualquier tamaño del efecto distinto de 0. 
+power.t.test
+pwr.t.test: UNA MUESTRA, DOS PAREADAS O IGUAL TAMAÑO
+pwr.t2n.test: DOS MUESTRAS INDEPENDIENTES DIFERENTE TAMAÑO
+
+%%%%%%%%%%%%%%%%%%%%%%%%% INFERENCIA CON PROPORCIONES MUESTRALES %%%%%%%%%%%%%%%%%%%%%%%%%
+En general, no conocemos la probabilidad de éxito p de la población, por lo que tenemos que usar el
+estimador puntual (correspondiente a la proporción de éxito de la muestra), denotado por pˆ.
+Este estimador se distribuye de manera cercana a la normal cuando se cumplen las siguientes condiciones:
+1. Las observaciones de la muestra son independientes.
+2. Se cumple la condición de éxito-fracaso, que establece que se espera observar al menos 10 observaciones correspondientes a éxito y al menos 10, correspondientes a fracasos. Matemáticamente, np ≥ 10
+y n(1 − p) ≥ 10.
+
+*** Método de Wald para una proporción ***
+
+El método de Wald permite construir intervalos de confianza y contrastar hipótesis bajo el supuesto de
+normalidad para una proporción. Consideremos el siguiente ejemplo: Aquiles Baeza, ingeniero en informática,
+desea conocer qué proporción de las ejecuciones de un algoritmo de ordenamiento para instancias con 100.000
+elementos (bajo iguales condiciones de hardware y sistema) tardan menos de 25 segundos. Para ello, registró
+los tiempos de ejecución para 150 instancias generadas de manera aleatoria, encontrando que 64 % de dichas
+instancias fueron resueltas en un tiempo menor al señalado.
+
+
+** Método de Wald para dos proporciones ***
+Para estudiar la diferencia entre las proporciones de dos poblaciones, considerando para ello como estimador puntual la diferencia p1 − p2.
+Condiciones
+1. Normalidad de las proporciones (por separado)
+2. Muestras independientes
+
+
+*********Wilson = Wald**********
+
+prop.test
+
+%%%%%%%%%%%%%%%%%%%%%%%%%  PODER Y PRUEBAS DE PROPORCIONES %%%%%%%%%%%%%%%%%%%%%%%%% 
+power.prop.test
+pwr.p.test(h, n, sig.level, power, alternative): para pruebas con una única proporción.
+pwr.2p.test(h, n, sig.level, power, alternative): para pruebas con dos proporciones donde ambas muestras son de igual tamaño.
+pwr.2p2n.test(h, n1, n2, sig.level, power, alternative): para pruebas con dos proporciones y muestras de diferente tamaño.
+bsamsize: prueba de Wilson con dos muestras, calcula los tamaños de cada grupo
+%%%%%%%%%%%%%%%%%%%%%%%%% INFERENCIA NO PARAMÉTRICA CON PROPORCIONES %%%%%%%%%%%%%%%%%%%%%%%%% 
+No hay parámetro en las hipótesis, e incluso no se menciona normalidad ni distribución.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%  PRUEBA CHI-CUADRADO DE PEARSON %%%%%%%%%%%%%%%%%%%%%%%%% 
+Para inferir con proporciones cuando disponemos de dos variables categóricas y una de ellas es dicotómica (es decir, tiene solo dos niveles).
+Condiciones:
+1. observaciones independientes
+2. AL MENOS 5 OBSERVACIONES
+En R: chisq.test
+
+1. Prueba chi-cuadrado de homogeneidad
+Adecuada cuando queremos determinar si dos poblaciones (la variable dicotómica) presentan las mismas proporciones en los diferentes niveles de una variable categórica. Ej: ¿Son similares las preferencias de lenguaje de programación entre hombres y mujeres?
+
+EJEMPLO DE APLICABILIDAD: 
+H0: programadores hombres y mujeres tienen las mismas preferencias en lenguaje de programación favorito (ambas poblaciones muestras las mismas proporciones para cada lenguaje estudiado).
+HA: programadores hombres y mujeres tienen preferencias distintas en lenguajes de programación favorito.
+
+2. Prueba chi-cuadrado de bondad de ajuste
+permite comprobar si una distribución de frecuencias observada se asemeja a una
+distribución esperada. Usualmente se emplea para comprobar si una muestra es representativa de la
+población.  
+EJEMPLO DE APLICABILIAD: "...Ante el inminente riesgo de movilizaciones, el gerente necesita demostrar que el grupo seleccionado es 
+una muestra representativa de sus programadores."
+H0: las proporciones de especialistas en cada lenguaje son las mismas para la nómina y la muestra.
+HA: las proporciones de especialistas en cada lenguaje son diferentes en la nómina que en la muestra.
+
+3. Prueba chi-cuadrado de independencia
+Permite determinar si dos variables categóricas, de una misma población, son estadísticamente independientes o si, por el contrario, están relacionadas.
+EJEMPLO DE APLICABILIDAD:
+En este caso, las hipótesis a docimar son:
+H0: las variables clase y forma del sombrero son independientes.
+HA: las variables clase y forma del sombrero están relacionadas.
+
+PRUEBAS PARA MUESTRAS CON OBSERVACIONES <5
+
+1. Prueba exacta de Fisher
+Alternativa a la prueba χ2 de independencia en el caso de que ambas variables sean dicotómicas. Así, las hipótesis a contrastar son:
+H0: las variables son independientes.
+HA: las variables están relacionadas.
+fisher.test
+
+2. Prueba de mcNemar
+Apropiada cuando una misma característica, con respuesta dicotómica, se mide en dos ocasiones diferentes para los mismos sujetos (muestras pareadas) y queremos determinar si se produce o no un cambio significativo entre ambas mediciones. 
+EJEMPLO:
+Las hipótesis asociadas a la prueba de mcNemar son:
+H0: no hay cambios significativos en las respuestas.
+HA: sí hay cambios significativos en las respuestas.
+mcnemar.test
+
+%%%%%%%%%%%%%%%%%%%%%%%%% PRUEBA Q DE COCHRAN
+Es una extensión de la prueba de mcNemar, adecuada cuando la variable de respuesta es dicotómica y la variable independiente tiene más de dos observaciones pareadas (cuando ambas variables son dicotómicas, esta prueba es equivalente a la de mcNemar).
+Las hipótesis contrastadas por la prueba Q de Cochran son:
+H0: la proporción de “éxitos” es la misma para todos los grupos.
+HA: la proporción de “éxitos” es distinta para al menos un grupo.
+Condiciones:
+La variable de respuesta es dicotómica.
+La variable independiente es categórica.
+Las observaciones son independientes entre sí.
+El tamaño de la muestra es lo suficientemente grande. Glen (2016a) sugiere que n · k ≥ 24, donde n es
+el tamaño de la muestra (la cantidad de instancias, para el ejemplo) y k, la cantidad de niveles en la
+variable independiente.
